@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="utf-8">
+    <title>object</title>
+
+    <style>
+        .templatemodtager {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 1000px;
+            margin: 0 auto;
+            grid-gap: 20px;
+        }
+
+        .menuItem {
+            border: 1px solid #0071BC;
+            padding: 10px;
+            border-radius: 10px;
+            display: grid;
+            grid-template-rows: 1fr 3fr 2fr 1fr 2fr;
+            margin: 0 auto;
+            max-height: 800px
+        }
+
+        .menuItem:nth-child(even) {
+            background: #91BED4;
+            border: 1px solid #0071BC;
+        }
+
+        .langbeskrivelse {
+            text-align: justify;
+            padding-top: 0;
+        }
+
+        .pris {
+            margin-top: 40px;
+        }
+
+        img {
+            width: 100%;
+
+        }
+
+        @media screen and (max-width:480px) {
+            .templatemodtager {
+                grid-template-columns: 1fr;
+            }
+
+    </style>
+</head>
+
+      <body>
+
+
+    <div class="templatemodtager">
+
+    </div>
+
+    <template class="menuTemplate">
+    <div class="menuItem">
+        <h1 class="navn"></h1>
+        <div class="billede"></div>
+        <h3 class="langbeskrivelse"></h3>
+        <p class="oprindelsesregion"></p>
+        <h2 class="pris"></h2>
+    </div>
+        </template>
+    <script>
+        let menu;
+
+
+        document.addEventListener("DOMContentLoaded", loadJson)
+
+
+        let modtager = document.querySelector(".templatemodtager");
+
+        let menuTemplate = document.querySelector(".menuTemplate");
+
+
+
+        async function loadJson() {
+            let menuListe = await fetch("menu.json");
+            menu = await menuListe.json();
+            console.log(menu)
+            visMenu(menu);
+        }
+
+        function visMenu(menu) {
+            menu.forEach(hverItem => {
+                let klon = menuTemplate.cloneNode(true).content;
+                klon.querySelector(".navn").textContent = hverItem.navn;
+                klon.querySelector(".billede").innerHTML = '<img src="babushka_assets/imgs/medium/' +
+                    hverItem.billede + '-md.jpg" alt="' + hverItem.kortbeskrivelse + '">';
+                klon.querySelector(".langbeskrivelse").textContent = hverItem.langbeskrivelse;
+                klon.querySelector(".oprindelsesregion").textContent = hverItem.oprindelsesregion;
+                klon.querySelector(".pris").textContent = hverItem.pris + ",- kroner";
+
+                modtager.appendChild(klon)
+            })
+        }
+
+    </script>
+</body>
+
+</html>
